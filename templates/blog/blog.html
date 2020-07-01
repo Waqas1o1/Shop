@@ -1,0 +1,146 @@
+{% extends 'basic.html' %} {% block body %}
+
+<body>
+    <!-- Blog Section Begin -->
+    <section class="blog-section spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1">
+                    <div class="blog-sidebar">
+                        <div class="search-form">
+                            <h4>Search</h4>
+                            <form id="search_blogpost">
+                                <input type="text" name="search" placeholder="Search . . .  ">
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                        <div class="blog-catagory">
+                            <h4>Categories</h4>
+                            <ul>
+                                {% for ctg in catagory %}
+                                <li><a class='filter_blog_by_ctg' id='{{ctg}}'>{{ctg}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="recent-post">
+                            <h4>Recent Post</h4>
+                            <div class="recent-blog">
+                                {% for post in Recent_posts %}
+                                <a href="#" class="rb-item">
+                                    <div class="rb-pic">
+                                        <img src="/media/{{post.cover_img}}" alt="">
+                                    </div>
+                                    <div class="rb-text">
+                                        <h6>{{post.title}}</h6>
+                                        <p>Fashion <span>- {{post.publish_date}}</span></p>
+                                    </div>
+                                </a>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <div class="blog-tags">
+                            <h4>Product Tags</h4>
+                            <div class="tag-item">
+                                <a href="#">Towel</a>
+                                <a href="#">Shoes</a>
+                                <a href="#">Coat</a>
+                                <a href="#">Dresses</a>
+                                <a href="#">Trousers</a>
+                                <a href="#">Men's hats</a>
+                                <a href="#">Backpack</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 order-1 order-lg-2">
+                    <div class="row" id='load_blog'>
+
+                        {% for post in Posts %}
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="blog-item">
+                                <div class="bi-pic">
+                                    <img src="/media/{{post.cover_img}}" alt="">
+                                </div>
+                                <div class="bi-text">
+                                    <a href="Blog/{{post.id}}">
+                                        <h4>{{post.title}}</h4>
+                                    </a>
+                                    <p>{{post.catagory}} <span>- May 19, 2019</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="col-lg-12">
+                            <div class="loading-more">
+                                <i class="icon_loading"></i>
+                                <a href="#">
+                                    Loading More
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Section End -->
+</body>
+{% endblock %} {% block Js %}
+<script>
+    $('.filter_blog_by_ctg').click(function(e) {
+        e.preventDefault()
+        var ctg = this.id;
+        $.ajax({
+            type: 'GET',
+            data: {
+                'catagory': ctg
+            },
+            url: '/Blog',
+            encode: true,
+            success: function(data) {
+                data_c = JSON.parse(data)
+                document.getElementById('load_blog').innerHTML = load_blog(data_c);
+            }
+        })
+
+    })
+
+    function load_blog(data) {
+        str = '';
+        for (var i in data) {
+            str += `  <div class="col-lg-6 col-sm-6">
+                            <div class="blog-item">
+                                <div class="bi-pic">
+                                    <img src="/media/${data[i]['cover_img']}" alt="">
+                                </div>
+                                <div class="bi-text">
+                                    <a href="Blog/{{post.id}}">
+                                        <h4>${data[i]['title']}</h4>
+                                    </a>
+                                    <p>${data[i]['catagory']}<span>- ${data[i]['publish_date']}</span></p>
+                                </div>
+                            </div>
+                        </div>`
+        }
+        return str;
+    }
+
+    $('#search_blogpost').on('submit', function(e) {
+
+        let search = $("input[name=search]").val();
+        $.ajax({
+            type: 'GET',
+            data: {
+                'search': search
+            },
+            url: '/Blog/search/',
+            encode: true,
+            success: function(data) {
+                let data_p = JSON.parse(data);
+                document.getElementById('load_blog').innerHTML = load_blog(data_p);
+            }
+        })
+        e.preventDefault()
+    })
+</script>{% endblock %}
