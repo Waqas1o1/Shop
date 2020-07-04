@@ -106,6 +106,23 @@
 
     })
 
+    $('#search_blogpost').click(function(e) {
+        e.preventDefault();
+        var search = $("input[name=search]").val();
+        $.ajax({
+            type: 'GET',
+            data: {
+                'search': search
+            },
+            url: '/Blog/search/',
+            encode: true,
+            success: function(data) {
+                let data_c = JSON.parse(data);
+                document.getElementById('load_blog').innerHTML = s;
+            }
+        })
+    })
+
     function load_blog(data) {
         str = '';
         for (var i in data) {
@@ -125,22 +142,4 @@
         }
         return str;
     }
-
-    $('#search_blogpost').on('submit', function(e) {
-
-        let search = $("input[name=search]").val();
-        $.ajax({
-            type: 'GET',
-            data: {
-                'search': search
-            },
-            url: '/Blog/search/',
-            encode: true,
-            success: function(data) {
-                let data_p = JSON.parse(data);
-                document.getElementById('load_blog').innerHTML = load_blog(data_p);
-            }
-        })
-        e.preventDefault()
-    })
 </script>{% endblock %}

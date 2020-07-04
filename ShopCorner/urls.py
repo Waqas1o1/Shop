@@ -8,5 +8,6 @@ urlpatterns = [
     path('Blog/',include('Blog.urls')),
     path('FAQ/',include('FAQ.urls')),
     path('Account/',include('Account.urls')),
+    path('Search/',include('Advancse_Search.urls')),
 ]+ static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)
 

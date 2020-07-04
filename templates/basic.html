@@ -86,12 +86,12 @@
                     <div class="col-lg-7 col-md-7">
                         <div class="advanced-search">
                             <!-- <button type="button" class="category-btn">All Categories</button> -->
-                            <select class='category-btn col-12' role="button">
+                            <select class='category-btn col-12' id='Catagory_search'>
                                 <option value="Shop">IN SHOP</option>
                                 <option value="Blog">IN BLOG</option>
                                 <option value="Faq">IN FAQ</option>
                             </select>
-                            <form action="#" class="input-group" style="float: right;" id='AdvancseSearch'>
+                            <form action="" class="input-group" style="float: right;" id='AdvancseSearch'>
                                 <input type="text" name='search' placeholder="What do you need?">
                                 <button type="submit"><i class="ti-search"></i></button>
                             </form>
@@ -359,7 +359,8 @@
     <!-- ADVANCSE Search  -->
     <script>
         $('#AdvancseSearch').on('submit', function(e) {
-            console.log('submit')
+            ctg = document.getElementById('Catagory_search').value
+            $(this).attr('action', "/Search/serach/" + ctg)
         })
     </script>
     {% block Js %} {% endblock %}
