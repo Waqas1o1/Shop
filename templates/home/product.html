@@ -38,9 +38,10 @@
                             <div class="product-details">
                                 <div class="pd-title">
 
-                                    <h3>{{ product.item_name }}</h3>
+                                    <h3 id='productname'>{{ product.item_titile}}</h3>
                                     <a href="#" class="heart-icon"><i class="icon_heart_alt"></i></a>
                                 </div>
+                                {% comment %}
                                 <div class="pd-rating">
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star"></i>
@@ -48,10 +49,14 @@
                                     <i class="fa fa-star"></i>
                                     <i class="fa fa-star-o"></i>
                                     <span>(5)</span>
-                                </div>
+                                </div> {% endcomment %} {% comment %} Pricse Display {% endcomment %}
                                 <div class="pd-desc">
                                     <p>{{product.item_discription}}</p>
-                                    <h4>{{product.item_FrashPricse}}<span>{{product.item_Discount_pricse}}</span></h4>
+                                    {% if product.item_Discount_pricse != 0 %}
+                                    <h4 id='pricse'>{{product.item_Discount_pricse}}<span>{{product.item_FrashPricse}}</span></h4>
+                                    {% else %}
+                                    <h4 id='pricse'>{{product.item_FrashPricse}}</h4>
+                                    {% endif %}
                                 </div>
                                 <div class="pd-color">
                                     <h6>Color</h6>
@@ -99,9 +104,9 @@
                                 </div>
                                 <div class="quantity">
                                     <div class="pro-qty">
-                                        <input type="text" value="1">
+                                        <input type="text" id='productquantity' value="1">
                                     </div>
-                                    <a href="#" class="primary-btn pd-cart">Add To Cart</a>
+                                    <a class="primary-btn pd-cart cartbtn" id="prd{{product.item_id}}">Add To Cart</a>
                                 </div>
                                 <ul class="pd-tags">
                                     <li><span>CATEGORIES</span>: {{product.item_category}}</li>
@@ -145,7 +150,7 @@
                                                     ex ea commodo consequat. Duis aute irure dolor in </p>
                                             </div>
                                             <div class="col-lg-5">
-                                                <img src="img/product-single/tab-desc.jpg" alt="">
+                                                <img src="/media/{{product.item_image}}" id='productimag' alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -204,10 +209,10 @@
                                                     {% elif product.medium %}
                                                     <div class="p-size">M</div>
                                                     {% elif product.large %}
-                                                    <div class="p-size" L</div>
-                                                        {% elif product.extra_large %}
-                                                        <div class="p-size">XL</div>
-                                                        {% endif %}
+                                                    <div class="p-size">L</div>
+                                                    {% elif product.extra_large %}
+                                                    <div class="p-size">XL</div>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -225,51 +230,49 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        </div>
                                     </div>
-                                    <div class="tab-pane fade" id="tab-3" role="tabpanel">
-                                        <div class="customer-review-option">
-                                            <h4>Comments</h4>
-                                            <div class="comment-option">
+                                </div>
+                                <div class="tab-pane fade" id="tab-3" role="tabpanel">
+                                    <div class="customer-review-option">
+                                        <h4>Comments</h4>
+                                        <div class="comment-option">
                                             {% for comment in comments %}
-                                                <div class="co-item">
-                                                     <div class="avatar-pic">
-                                                        
-                                                        <span uk-icon="icon: check; ratio: 1"></span>
-                                                    </div>
-                                                    
-                                                        <h5> {{ comment.user }} <span>  : </span>
-                                                       <small>{{comment.timestamp}}</small> </h5>
-                                                        <div class="at-reply"> {{comment.comment}} </div>
-                                                    </div>
-                                            {% endfor %}
+                                            <div class="co-item">
+                                                <div class="avatar-pic">
+
+                                                    <span uk-icon="icon: check; ratio: 1"></span>
                                                 </div>
-                                                
+
+                                                <h5> {{ comment.user }} <span>  : </span>
+                                                    <small>{{comment.timestamp}}</small> </h5>
+                                                <div class="at-reply"> {{comment.comment}} </div>
                                             </div>
-                                            
-                                            <div class="leave-comment">
-                                                {% if user.is_authenticated %}
-                                                <h4>Leave A Comment</h4>
-                                                <br>
-                                                <form action="/postcomment/{{id}}" class="comment-form" method="POST">
-                                                    {% csrf_token %}
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <h6><span uk-icon="icon: user; ratio: 0.8"></span> {{user}}</h6>
-                                                            <!-- <input type="text" name='name' placeholder="Name"> -->
-                                                        </div>
-                                                        <br>
-                                                        <br>
-                                                        <div class="col-lg-8">
-                                                            <textarea placeholder="Messages" name='comment' class='form-control'></textarea>
-                                                            <br>
-                                                            <button type="submit" class="site-btn  float-right">Send message</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                {% endif %}
-                                            </div>
+                                            {% endfor %}
                                         </div>
+
+                                    </div>
+
+                                    <div class="leave-comment">
+                                        {% if user.is_authenticated %}
+                                        <h4>Leave A Comment</h4>
+                                        <br>
+                                        <form action="/postcomment/{{id}}" class="comment-form" method="POST">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <h6><span uk-icon="icon: user; ratio: 0.8"></span> {{user}}</h6>
+                                                    <!-- <input type="text" name='name' placeholder="Name"> -->
+                                                </div>
+                                                <br>
+                                                <br>
+                                                <div class="col-lg-8">
+                                                    <textarea placeholder="Messages" name='comment' class='form-control'></textarea>
+                                                    <br>
+                                                    <button type="submit" class="site-btn  float-right">Send message</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -277,10 +280,13 @@
                     </div>
                 </div>
             </div>
+        </div>
+        </div>
     </section>
     <!-- Product Shop Section End -->
 
     <!-- Related Products Section End -->
+    {% if realted_products %}
     <div class="related-products spad">
         <div class="container">
             <div class="row">
@@ -326,29 +332,9 @@
                     </div>
                 </div>
                 {% endfor %}
-
-                <div class="col-lg-3 col-sm-6">
-                    <div class="product-item">
-                        <div class="pi-pic">
-                            <img src="img/products/women-2.jpg" alt="">
-                            <div class="icon">
-                                <i class="icon_heart_alt"></i>
-                            </div>
-                            <ul>
-                                <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                <li class="quick-view"><a href="#">+ Quick View</a></li>
-                                <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
-
             </div>
         </div>
         <!-- Related Products Section End -->
+        {% endif %}
 </body>
-{% endblock %}
-{% block Js %}
-<script></script>
-{% endblock  %}
+{% endblock %} {% block Js %} {% endblock %}

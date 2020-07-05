@@ -130,3 +130,6 @@ def Search_Shop(request):
         data = Item.objects.filter(item_titile__icontains=search)
         send_data = json.dumps(product_load(data))
         return HttpResponse(send_data)
+
+def ShopCart(request):
+    return render(request,'home/shopping-cart.html')

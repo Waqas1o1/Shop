@@ -14,4 +14,6 @@ urlpatterns = [
     path('search/',views.Search_Shop,name='searchpage'),
     # Comment
     path('postcomment/<int:pid>',views.Comment_handle,name='filtertagspage'),
+    # Cart
+    path('Shopcart/',views.ShopCart,name='shopcartpage')
 ]

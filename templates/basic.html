@@ -107,51 +107,27 @@
                             </li>
                             <li class="cart-icon">
                                 <a href="#">
-                                    <i class="icon_bag_alt"></i>
-                                    <span>3</span>
+                                    <i class="icon_bag_alt cartbtn" id=''></i>
+                                    <span id='countcart'>$0</span>
                                 </a>
                                 <div class="cart-hover">
                                     <div class="select-items">
                                         <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="si-pic"><img src="" alt=""></td>
-                                                    <td class="si-text">
-                                                        <div class="product-selected">
-                                                            <p>$60.00 x 1</p>
-                                                            <h6>Kabino Bedside Table</h6>
-                                                        </div>
-                                                    </td>
-                                                    <td class="si-close">
-                                                        <i class="ti-close"></i>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="si-pic"><img src='' alt=""></td>
-                                                    <td class="si-text">
-                                                        <div class="product-selected">
-                                                            <p>$60.00 x 1</p>
-                                                            <h6>Kabino Bedside Table</h6>
-                                                        </div>
-                                                    </td>
-                                                    <td class="si-close">
-                                                        <i class="ti-close"></i>
-                                                    </td>
-                                                </tr>
+                                            <tbody id='cart'>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="select-total">
                                         <span>total:</span>
-                                        <h5>$120.00</h5>
+                                        <h5 id='totalpricse'>$0.00</h5>
                                     </div>
                                     <div class="select-button">
-                                        <a href="#" class="primary-btn view-card">VIEW CARD</a>
+                                        <a href="/Shopcart/" class="primary-btn view-card">VIEW CARD</a>
                                         <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
                                     </div>
                                 </div>
                             </li>
-                            <li class="cart-price">$150.00</li>
+                            <li class="cart-price" id='totalpricse'>$0.00</li>
                         </ul>
                     </div>
                 </div>
@@ -362,6 +338,66 @@
             ctg = document.getElementById('Catagory_search').value
             $(this).attr('action', "/Search/serach/" + ctg)
         })
+    </script>
+    <script>
+        if (localStorage.getItem('cart') == null) {
+            var cart = {};
+        } else {
+            var cart = JSON.parse(localStorage.getItem('cart'));
+            updatepopover(cart);
+        }
+        // Add cart button
+        $('.cartbtn').click(function() {
+                var idstr = this.id.slice(3).toString();
+                if (cart[idstr] != undefined) {
+                    let qty = document.getElementById('productquantity').value;
+                    cart[idstr][0] = qty;
+                } else {
+                    let qty = document.getElementById('productquantity').value;
+                    let pricse = document.getElementById('pricse').innerHTML;
+                    let name = document.getElementById('productname').innerHTML;
+                    let imag_path = document.getElementById('productimag').src;
+                    imag_path = imag_path.split('/').slice(-1)[0];
+                    cart[idstr] = [qty, name, parseFloat(pricse), imag_path]
+                }
+                console.log(cart);
+                updatepopover(cart);
+            })
+            // when Cross click
+        $('.ti-close').click(function(e) {
+            let id = this.id;
+            let cart = JSON.parse(localStorage.getItem('cart'));
+            localStorage.clear();
+            updatepopover(cart);
+        })
+
+        function updatepopover(cart) {
+            let str = '';
+            let totoalpricse = 0;
+            for (var item in cart) {
+                str += ` <tr>
+                                <td class="si-pic"><img src="/media/${cart[item][3]}"  style="max-width: 80px;" alt=""></td>
+                                <td class="si-text">
+                                    <div class="product-selected">
+                                        <p>$${cart[item][2]} x ${cart[item][0]}</p>
+                                        <h6>${cart[item][1]}</h6>
+                                    </div>
+                                </td>
+                                <td class="si-close">
+                                    <i class="ti-close" id="pr${item}"></i>
+                                </td>
+                        </tr>`
+                totoalpricse += cart[item][2] * cart[item][0];
+            }
+            document.getElementById('cart').innerHTML = str;
+            document.getElementById('countcart').innerHTML = Object.keys(cart).length;
+            document.getElementById('totalpricse').innerHTML = totoalpricse.toFixed(2);
+            updatecart(cart)
+        }
+
+        function updatecart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
     </script>
     {% block Js %} {% endblock %}
 

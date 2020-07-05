@@ -1,0 +1,95 @@
+{% extends 'basic.html' %} {% block body %}
+
+<body>
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="cart-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th class="p-name">Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th><i class="ti-close"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id='loadcart'>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="cart-buttons">
+                                <a href="#" class="primary-btn continue-shop">Continue shopping</a>
+                                <a href="#" class="primary-btn up-cart">Update cart</a>
+                            </div>
+                            <div class="discount-coupon">
+                                <h6>Discount Codes</h6>
+                                <form action="#" class="coupon-form">
+                                    <input type="text" placeholder="Enter your codes">
+                                    <button type="submit" class="site-btn coupon-btn">Apply</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 offset-lg-4">
+                            <div class="proceed-checkout">
+                                <ul>
+                                    <li class="subtotal">Subtotal <span>$240.00</span></li>
+                                    <li class="cart-total">Total <span>$240.00</span></li>
+                                </ul>
+                                <a href="#" class="proceed-btn">PROCEED TO CHECK OUT</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shopping Cart Section End -->
+</body>
+{% endblock %} {% block Js %}
+<script>
+    document.getElementById('loadcart').innerHTML = loadcart();
+
+    function loadcart() {
+        let str = ''
+        cart = JSON.parse(localStorage.getItem('cart'))
+        for (var i in cart) {
+            str += `  <tr>
+                        <td class="cart-pic first-row"><img src="/media/${cart[i][3]}"  style="max-width: 150px;padding-right:10px" alt=""></td>
+                        <td class="cart-title first-row">
+                            <h5>${cart[i][1]}</h5>
+                        </td>
+                        <td class="p-price first-row">${cart[i][2]}</td>
+                        <td class="qua-col first-row">
+                            <div >
+                                <div class="pro-qty">
+                                    <input type="number" style='width:100%' class='quantity' id='qty${i}' value="${cart[i][0]}">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="total-price first-row" id=pt${i}>${cart[i][2] * cart[i][0]}</td>
+                        <td class="close-td first-row"><i class="ti-close"></i></td>
+                    </tr>`
+        }
+        return str;
+    }
+    $('.quantity').on('input', function(e) {
+        let id = this.id.slice(3)
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart[id][0] = this.value;
+        document.getElementById('pt' + id).innerHTML = (cart[id][2] * cart[id][0]).toFixed(1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+    })
+</script>
+{% endblock %}
+
+</html>
