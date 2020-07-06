@@ -365,11 +365,11 @@
                 updatepopover(cart);
             })
             // when Cross click
-        $('.ti-close').click(function(e) {
+        $('.ti-close').on('click', function(e) {
             let id = this.id;
-            let cart = JSON.parse(localStorage.getItem('cart'));
-            localStorage.clear();
-            updatepopover(cart);
+            var cart = JSON.parse(localStorage.getItem('cart'));
+            delete cart[id];
+            updatepopover(cart)
         })
 
         function updatepopover(cart) {
@@ -377,16 +377,16 @@
             let totoalpricse = 0;
             for (var item in cart) {
                 str += ` <tr>
-                                <td class="si-pic"><img src="/media/${cart[item][3]}"  style="max-width: 80px;" alt=""></td>
-                                <td class="si-text">
-                                    <div class="product-selected">
-                                        <p>$${cart[item][2]} x ${cart[item][0]}</p>
-                                        <h6>${cart[item][1]}</h6>
-                                    </div>
-                                </td>
-                                <td class="si-close">
-                                    <i class="ti-close" id="pr${item}"></i>
-                                </td>
+                            <td class="si-pic"><img src="/media/${cart[item][3]}"  style="max-width: 80px;" alt=""></td>
+                            <td class="si-text">
+                                <div class="product-selected">
+                                    <p>$${cart[item][2]} x ${cart[item][0]}</p>
+                                    <h6>${cart[item][1]}</h6>
+                                </div>
+                            </td>
+                            <td class="si-close">
+                                <a class="ti-close" id="${item}"></a>
+                            </td>
                         </tr>`
                 totoalpricse += cart[item][2] * cart[item][0];
             }

@@ -343,17 +343,18 @@
         let c = $('input[name=chossecolor]:checked').val();
         console.log(c)
     })
-    $('.cartbtn').click(function() {
-        var id = this.id;
-        console.log(this.id);
-        var cart = JSON.parse(localStorage.getItem('cart'));
-        for (var i in cart) {
-            if (id == i) {
-                document.getElementById(i).innerHTML = '<span class="uk-margin-small-right" uk-icon="check"></span>Added'
-                $('#' + this.id).fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
-            }
-        }
-    })
+
+    // $('.cartbtn').click(function() {
+    //     var id = this.id;
+    //     console.log(this.id);
+    //     var cart = JSON.parse(localStorage.getItem('cart'));
+    //     for (var i in cart) {
+    //         if (id == i) {
+    //             document.getElementById(i).innerHTML = '<span class="uk-margin-small-right" uk-icon="check"></span>Added'
+    //             $('#' + this.id).fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
+    //         }
+    //     }
+    // })
     $('#productquantity').on('input', function() {
         $('.cartbtn').fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
     })
