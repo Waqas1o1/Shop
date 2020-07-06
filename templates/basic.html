@@ -348,7 +348,8 @@
         }
         // Add cart button
         $('.cartbtn').click(function() {
-                var idstr = this.id.slice(3).toString();
+
+                var idstr = this.id.toString();
                 if (cart[idstr] != undefined) {
                     let qty = document.getElementById('productquantity').value;
                     cart[idstr][0] = qty;

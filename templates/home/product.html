@@ -63,17 +63,17 @@
                                     <div class="pd-color-choose">
                                         {% if product.item_color1 != None %}
                                         <div class="cc-item">
-                                            <input type="radio" id="">
+                                            <input type="radio" nme='chossecolor' vlaue="c1{{product.item_color1}}">
                                             <label for="" style='Background-color:{{product.item_color1}}'></label>
                                         </div>
                                         {% endif %} {% if product.item_color2 != None %}
                                         <div class="cc-item">
-                                            <input type="radio" id="">
+                                            <input type="radio" nme='chossecolor' vlaue="c2{{product.item_color1}}">
                                             <label for="" style='Background-color:{{product.item_color2}}'></label>
                                         </div>
                                         {% endif %} {% if product.item_color3 != None %}
                                         <div class="cc-item">
-                                            <input type="radio" id="">
+                                            <input type="radio" nme='chossecolor' vlaue="c3{{product.item_color1}}">
                                             <label for="" style='Background-color:{{product.item_color3}}'></label>
                                         </div>
                                         {% endif %}
@@ -106,7 +106,7 @@
                                     <div class="pro-qty">
                                         <input type="text" id='productquantity' value="1">
                                     </div>
-                                    <a class="primary-btn pd-cart cartbtn" id="prd{{product.item_id}}">Add To Cart</a>
+                                    <a class="primary-btn pd-cart cartbtn" id="pdt{{product.item_id}}">Add To Cart</a>
                                 </div>
                                 <ul class="pd-tags">
                                     <li><span>CATEGORIES</span>: {{product.item_category}}</li>
@@ -337,4 +337,27 @@
         <!-- Related Products Section End -->
         {% endif %}
 </body>
-{% endblock %} {% block Js %} {% endblock %}
+{% endblock %} {% block Js %}
+<script>
+    $('.cc-item').click(function(e) {
+        let c = $('input[name=chossecolor]:checked').val();
+        console.log(c)
+    })
+    $('.cartbtn').click(function() {
+        var id = this.id;
+        console.log(this.id);
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        for (var i in cart) {
+            if (id == i) {
+                document.getElementById(i).innerHTML = '<span class="uk-margin-small-right" uk-icon="check"></span>Added'
+                $('#' + this.id).fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
+            }
+        }
+    })
+    $('#productquantity').on('input', function() {
+        $('.cartbtn').fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
+    })
+    $('.qtybtn').on('click', function() {
+        $('.cartbtn').fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
+    })
+</script>{% endblock %}

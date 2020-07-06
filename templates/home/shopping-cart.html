@@ -87,7 +87,6 @@
         cart[id][0] = this.value;
         document.getElementById('pt' + id).innerHTML = (cart[id][2] * cart[id][0]).toFixed(1);
         localStorage.setItem('cart', JSON.stringify(cart));
-
     })
 </script>
 {% endblock %}
