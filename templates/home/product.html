@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="pd-color">
                                     <h6>Color</h6>
-                                    <div class="pd-color-choose">
+                                    <div class="pd-color-choose" id='sizechose'>
                                         {% if product.item_color1 != None %}
                                         <div class="cc-item">
                                             <input type="radio" nme='chossecolor' vlaue="c1{{product.item_color1}}">
@@ -82,23 +82,23 @@
                                 <div class="pd-size-choose">
                                     {% if product.small %}
                                     <div class="sc-item">
-                                        <input type="radio" id="sm-size">
+                                        <input type="radio" class='sizebtn' value='small' id="sm-size">
                                         <label for="sm-size">s</label>
+                                    </div>
+                                    {% endif %} {% if product.extra_small %}
+                                    <div class="sc-item">
+                                        <input type="radio" class='sizebtn' value='extra small' id="xl-size">
+                                        <label for="xl-size">xs</label>
                                     </div>
                                     {% endif %} {% if product.medium %}
                                     <div class="sc-item">
-                                        <input type="radio" id="md-size">
+                                        <input type="radio" class='sizebtn' value='medium' id="md-size">
                                         <label for="md-size">m</label>
                                     </div>
                                     {% endif %} {% if product.large %}
                                     <div class="sc-item">
-                                        <input type="radio" id="lg-size">
+                                        <input type="radio" class='sizebtn' value='large' id="lg-size">
                                         <label for="lg-size">l</label>
-                                    </div>
-                                    {% endif %} {% if product.extra_small %}
-                                    <div class="sc-item">
-                                        <input type="radio" id="xl-size">
-                                        <label for="xl-size">xs</label>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -339,26 +339,78 @@
 </body>
 {% endblock %} {% block Js %}
 <script>
-    $('.cc-item').click(function(e) {
-        let c = $('input[name=chossecolor]:checked').val();
-        console.log(c)
-    })
+    var cart = JSON.parse(localStorage.getItem('cart'));
 
-    // $('.cartbtn').click(function() {
-    //     var id = this.id;
-    //     console.log(this.id);
-    //     var cart = JSON.parse(localStorage.getItem('cart'));
-    //     for (var i in cart) {
-    //         if (id == i) {
-    //             document.getElementById(i).innerHTML = '<span class="uk-margin-small-right" uk-icon="check"></span>Added'
-    //             $('#' + this.id).fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
-    //         }
-    //     }
-    // })
+    // Get Sizes
+    var size = '';
+    $('.sizebtn').click(function() {
+            size = this.value;
+        })
+        // Fadd Animations
     $('#productquantity').on('input', function() {
         $('.cartbtn').fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
     })
     $('.qtybtn').on('click', function() {
         $('.cartbtn').fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
     })
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    } else {
+        updatepopover(cart);
+    }
+    // Add cart button
+    $('.cartbtn').click(function() {
+
+            var idstr = this.id.toString();
+            if (cart[idstr] != undefined) {
+                let qty = document.getElementById('productquantity').value;
+                cart[idstr][0] = qty;
+                cart[idstr][4] = size;
+            } else {
+                let qty = document.getElementById('productquantity').value;
+                let pricse = document.getElementById('pricse').innerHTML;
+                let name = document.getElementById('productname').innerHTML;
+                let imag_path = document.getElementById('productimag').src;
+                imag_path = imag_path.split('/').slice(-1)[0];
+                cart[idstr] = [qty, name, parseFloat(pricse), imag_path, size]
+            }
+            alert('Item : "' + cart[idstr][1] + '" is added to cart list');
+            updatepopover(cart);
+        })
+        // when Cross click
+    $('.ti-close').on('click', function(e) {
+            let id = this.id;
+            var cart = JSON.parse(localStorage.getItem('cart'));
+            delete cart[id];
+            updatepopover(cart);
+        })
+        // Updting funtion
+    function updatepopover(cart) {
+        let str = '';
+        let totoalpricse = 0;
+        for (var item in cart) {
+            str += ` <tr>
+                            <td class="si-pic"><img src="/media/${cart[item][3]}"  style="max-width: 80px;" alt=""></td>
+                            <td class="si-text">
+                                <div class="product-selected">
+                                    <p>$${cart[item][2]} x ${cart[item][0]}</p>
+                                    <small style='color:darkgray'>${cart[item][4]}</samll>
+                                    <h6>${cart[item][1]}</h6>
+                                </div>
+                            </td>
+                            <td class="si-close">
+                                <a class="ti-close" id="${item}"></a>
+                            </td>
+                    </tr>`
+            totoalpricse += cart[item][2] * cart[item][0];
+        }
+        document.getElementById('cart').innerHTML = str;
+        document.getElementById('countcart').innerHTML = Object.keys(cart).length;
+        document.getElementById('totalpricse').innerHTML = totoalpricse.toFixed(2);
+        updatecart(cart)
+    }
+
+    function updatecart(cart) {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
 </script>{% endblock %}

@@ -361,7 +361,7 @@
                     imag_path = imag_path.split('/').slice(-1)[0];
                     cart[idstr] = [qty, name, parseFloat(pricse), imag_path]
                 }
-                console.log(cart);
+                alert('Item : "' + cart[idstr][1] + '" is added to cart list');
                 updatepopover(cart);
             })
             // when Cross click
@@ -369,7 +369,7 @@
             let id = this.id;
             var cart = JSON.parse(localStorage.getItem('cart'));
             delete cart[id];
-            updatepopover(cart)
+            updatepopover(cart);
         })
 
         function updatepopover(cart) {
@@ -377,16 +377,16 @@
             let totoalpricse = 0;
             for (var item in cart) {
                 str += ` <tr>
-                            <td class="si-pic"><img src="/media/${cart[item][3]}"  style="max-width: 80px;" alt=""></td>
-                            <td class="si-text">
-                                <div class="product-selected">
-                                    <p>$${cart[item][2]} x ${cart[item][0]}</p>
-                                    <h6>${cart[item][1]}</h6>
-                                </div>
-                            </td>
-                            <td class="si-close">
-                                <a class="ti-close" id="${item}"></a>
-                            </td>
+                                <td class="si-pic"><img src="/media/${cart[item][3]}"  style="max-width: 80px;" alt=""></td>
+                                <td class="si-text">
+                                    <div class="product-selected">
+                                        <p>$${cart[item][2]} x ${cart[item][0]}</p>
+                                        <h6>${cart[item][1]}</h6>
+                                    </div>
+                                </td>
+                                <td class="si-close">
+                                    <a class="ti-close" id="${item}"></a>
+                                </td>
                         </tr>`
                 totoalpricse += cart[item][2] * cart[item][0];
             }
@@ -395,6 +395,10 @@
             document.getElementById('totalpricse').innerHTML = totoalpricse.toFixed(2);
             updatecart(cart)
         }
+        $('.sizebtn').click(function() {
+            let val = this.value;
+
+        })
 
         function updatecart(cart) {
             localStorage.setItem('cart', JSON.stringify(cart));

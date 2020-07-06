@@ -142,9 +142,7 @@
                                         </div>
                                         {% endif %}
                                         <ul>
-                                            <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                            <li class="quick-view"><a href="/product/{{item.item_id}}">+ Quick View</a></li>
-                                            <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
+                                            <li class="quick-view" style='width:90%;'><a href="/product/{{item.item_id}}" style="border: 1px solid #ffc107; orange;">+ Quick View</a></li>
                                         </ul>
                                     </div>
                                     <div class="pi-text">
@@ -181,14 +179,14 @@
 <script>
     // Private funtion 
     function prouct_load(data) {
-        var p_str = ''
+        var p_str = ' '
         for (var i in data) {
             p_str += `<div class="col-lg-4 col-sm-6">
                     <div class="product-item">
                         <div class="pi-pic">
-                            <img src="/media/${data[i]['image']}" alt="">   
+                            <img src="/media/${data[i]['image ']}" alt="">   
                             `
-            if (data[i]['dicsount'] != 0) {
+            if (data[i]['dicsount '] != 0) {
                 p_str += `
                             <div class="sale pp-sale">Sale</div>`
 
@@ -201,21 +199,21 @@
                         {% endif %}
                             <ul>
                                 <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                                <li class="quick-view"><a href="/product/${data[i]['id']}">+ Quick View</a></li>
+                                <li class="quick-view"><a href="/product/${data[i]['id ']}">+ Quick View</a></li>
                                 <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
                             </ul>
                         </div>
                         <div class="pi-text">
-                            <div class="catagory-name">${data[i]['name']}</div>
+                            <div class="catagory-name">${data[i]['name ']}</div>
                             <a href="#">
-                                <h5>${data[i]['title']}</h5>
+                                <h5>${data[i]['title ']}</h5>
                             </a>
                             <div class="product-price">
                             `
-            if (data[i]['dicsount'] != 0) {
-                p_str += ` $${data[i]['dicsount']} <span>$${data[i]['pricse']}</span>`
+            if (data[i]['dicsount '] != 0) {
+                p_str += ` $${data[i]['dicsount ']} <span>$${data[i]['pricse ']}</span>`
             } else {
-                p_str += `$${data[i]['pricse']}`
+                p_str += `$${data[i]['pricse ']}`
             }
             p_str += `   </div>
                                     </div>
@@ -226,87 +224,87 @@
         return p_str
     };
     // Sort Options LOAD
-    $('#sorting').on('change', function(e) {
+    $('#sorting ').on('change ', function(e) {
             selected_value = this.value
             $.ajax({
-                type: 'GET',
-                url: '/shopsorting/' + selected_value,
+                type: 'GET ',
+                url: '/shopsorting/ ' + selected_value,
                 // data: formData,
                 encode: true,
                 success: function(data) {
                     var parsed = JSON.parse(data)
-                    document.getElementById('product_list').innerHTML = prouct_load(parsed);
-                    document.getElementById('product_count').innerHTML = parsed.length;
+                    document.getElementById('product_list ').innerHTML = prouct_load(parsed);
+                    document.getElementById('product_count ').innerHTML = parsed.length;
                 }
             })
         })
         // Catagory Flter Load
-    $('.filter_ctg').click(function(e) {
+    $('.filter_ctg ').click(function(e) {
             var id = this.id
             $.ajax({
-                type: 'Get',
-                url: '/filter_catagory/' + id,
+                type: 'Get ',
+                url: '/filter_catagory/ ' + id,
                 encode: true,
                 success: function(data) {
                     var filter_results = JSON.parse(data)
-                    document.getElementById('product_list').innerHTML = prouct_load(filter_results);
-                    document.getElementById('product_count').innerHTML = filter_results.length;
+                    document.getElementById('product_list ').innerHTML = prouct_load(filter_results);
+                    document.getElementById('product_count ').innerHTML = filter_results.length;
                 }
             })
         })
         // Pricse filter
-    $('#filterpricsebtn').click(function(e) {
-            var min = $('#minamount').val();
-            var max = $('#maxamount').val();
+    $('#filterpricsebtn ').click(function(e) {
+            var min = $('#minamount ').val();
+            var max = $('#maxamount ').val();
             $.ajax({
-                type: 'GET',
+                type: 'GET ',
                 data: {
-                    'Maxamount': max,
-                    'Minamount': min,
+                    'Maxamount ': max,
+                    'Minamount ': min,
                 },
-                url: '/filter/' + 'pricse',
+                url: '/filter/ ' + 'pricse ',
                 encode: true,
                 success: function(data) {
                     d = JSON.parse(data)
                     prouct_load(d)
-                    document.getElementById('product_list').innerHTML = prouct_load(d);
-                    document.getElementById('product_count').innerHTML = d.length;
+                    document.getElementById('product_list ').innerHTML = prouct_load(d);
+                    document.getElementById('product_count ').innerHTML = d.length;
                 }
             })
         })
         // Filte Sizes
-    $('.load_Sizes').click(function(e) {
+    $('.load_Sizes ').click(function(e) {
             size = this.value
             $.ajax({
-                type: 'GET',
+                type: 'GET ',
                 data: {
-                    'Size': size,
+                    'Size ': size,
                 },
-                url: '/filter_bysizes/',
+                url: '/filter_bysizes/ ',
                 encode: true,
                 success: function(data) {
                     d = JSON.parse(data)
                     prouct_load(d)
-                    document.getElementById('product_list').innerHTML = prouct_load(d);
-                    document.getElementById('product_count').innerHTML = d.length;
+                    document.getElementById('product_list ').innerHTML = prouct_load(d);
+                    document.getElementById('product_count ').innerHTML = d.length;
                 }
             })
         })
         // Tags Filter
-    $('.tag_filter').click(function(e) {
+    $('.tag_filter ').click(function(e) {
         var id = this.id;
         $.ajax({
-            type: 'GET',
+            type: 'GET ',
             data: {
-                'tag': id
+                'tag ': id
             },
-            url: '/filter_bytags',
+            url: '/filter_bytags ',
             encode: true,
             success: function(data) {
                 d = JSON.parse(data)
 
-                document.getElementById('product_list').innerHTML = prouct_load(d);
-                document.getElementById('product_count').innerHTML = d.length;
+                document.getElementById('product_list ').innerHTML = prouct_load(d);
+                document.getElementById('product_count ').innerHTML = d.length;
             }
         })
     })
