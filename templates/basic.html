@@ -123,7 +123,7 @@
                                     </div>
                                     <div class="select-button">
                                         <a href="/Shopcart/" class="primary-btn view-card">VIEW CARD</a>
-                                        <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
+                                        <a href="/Checkout/" class="primary-btn checkout-btn">CHECK OUT</a>
                                     </div>
                                 </div>
                             </li>
@@ -335,8 +335,8 @@
     <!-- ADVANCSE Search  -->
     <script>
         $('#AdvancseSearch').on('submit', function(e) {
-            ctg = document.getElementById('Catagory_search').value
-            $(this).attr('action', "/Search/serach/" + ctg)
+            ctg = document.getElementById('Catagory_search').value;
+            $(this).attr('action', "/Search/serach/" + ctg);
         })
     </script>
     <script>
@@ -359,7 +359,7 @@
                     let name = document.getElementById('productname').innerHTML;
                     let imag_path = document.getElementById('productimag').src;
                     imag_path = imag_path.split('/').slice(-1)[0];
-                    cart[idstr] = [qty, name, parseFloat(pricse), imag_path]
+                    cart[idstr] = [qty, name, parseFloat(pricse), imag_path,'Availible Size',0]
                 }
                 alert('Item : "' + cart[idstr][1] + '" is added to cart list');
                 updatepopover(cart);

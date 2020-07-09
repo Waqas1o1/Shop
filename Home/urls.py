@@ -15,5 +15,7 @@ urlpatterns = [
     # Comment
     path('postcomment/<int:pid>',views.Comment_handle,name='filtertagspage'),
     # Cart
-    path('Shopcart/',views.ShopCart,name='shopcartpage')
+    path('Shopcart/',views.ShopCart,name='shopcartpage'),
+    # Ceckout
+    path('Checkout/',views.CheckOut,name='checkout'),
 ]

@@ -82,23 +82,23 @@
                                 <div class="pd-size-choose">
                                     {% if product.small %}
                                     <div class="sc-item">
-                                        <input type="radio" class='sizebtn' value='small' id="sm-size">
-                                        <label for="sm-size">s</label>
+                                        <input type="radio" active class='sizebtn' value='small' id="sm-size">
+                                        <label for="sm-size" id='small'>s</label>
                                     </div>
                                     {% endif %} {% if product.extra_small %}
                                     <div class="sc-item">
-                                        <input type="radio" class='sizebtn' value='extra small' id="xl-size">
-                                        <label for="xl-size">xs</label>
+                                        <input type="radio" class='sizebtn' value='extra small' id="xs-size">
+                                        <label for="xl-size" id='extrasmall'>xs</label>
                                     </div>
                                     {% endif %} {% if product.medium %}
                                     <div class="sc-item">
                                         <input type="radio" class='sizebtn' value='medium' id="md-size">
-                                        <label for="md-size">m</label>
+                                        <label for="md-size" id='medium'>m</label>
                                     </div>
                                     {% endif %} {% if product.large %}
                                     <div class="sc-item">
                                         <input type="radio" class='sizebtn' value='large' id="lg-size">
-                                        <label for="lg-size">l</label>
+                                        <label for="lg-size" id='large'>l</label>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -340,13 +340,34 @@
 {% endblock %} {% block Js %}
 <script>
     var cart = JSON.parse(localStorage.getItem('cart'));
+    var i = window.location.href.split('/')[4];
 
-    // Get Sizes
-    var size = '';
-    $('.sizebtn').click(function() {
+    try {
+        var size = cart['pdt' + i][4];
+        let cls = '';
+        if (size == 'medium') {
+            cls = '#medium'
+        }
+        if (size == 'small') {
+            cls = '#small'
+        }
+        if (size == 'extra small') {
+            cls = '#extrasmall'
+        }
+        if (size == 'large') {
+            cls = '#large'
+        }
+        $(cls).addClass('active');
+        // Get Sizes
+        var size = '';
+        $('.sizebtn').click(function() {
             size = this.value;
         })
-        // Fadd Animations
+    } catch {
+
+    }
+
+    // Fadd Animations
     $('#productquantity').on('input', function() {
         $('.cartbtn').fadeOut(30).fadeIn(30).fadeOut(30).fadeIn(30);
     })
@@ -360,7 +381,6 @@
     }
     // Add cart button
     $('.cartbtn').click(function() {
-
             var idstr = this.id.toString();
             if (cart[idstr] != undefined) {
                 let qty = document.getElementById('productquantity').value;

@@ -15,6 +15,13 @@ class Product(models.Model):
     def __str__(self):
         return self.product_category 
     
+class Coupen(models.Model):
+    code = models.CharField(max_length=30)
+    issue_date = models.DateTimeField(default=dt.now)
+    expire_date = models.DateTimeField()
+    discount = models.IntegerField(help_text='In Percsent')
+    def __str__(self):
+        return self.code
 class Item(models.Model):
     item_id = models.AutoField(primary_key=True)
     item_category = models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -42,10 +49,11 @@ class Item(models.Model):
     item_zoom_pic1 = models.ImageField(blank=True)
     item_zoom_pic2 = models.ImageField(blank=True)
     item_zoom_pic3 = models.ImageField(blank=True)
- 
+    # Cuppen
+    item_coupen = models.ManyToManyField(Coupen)
     def __str__(self):
         return self.item_name + ' ' + self.item_titile
-    
+
 class Promotions(models.Model):
     promoion_id = models.AutoField(primary_key=True)
     promotion_title = models.CharField(max_length=100)

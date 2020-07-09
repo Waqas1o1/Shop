@@ -13,6 +13,7 @@
                                     <th>Image</th>
                                     <th class="p-name">Product Name</th>
                                     <th>Price</th>
+                                    <th>Coupen pricse</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
                                     <th><i class="ti-close"></i></th>
@@ -32,8 +33,9 @@
                             </div>
                             <div class="discount-coupon">
                                 <h6>Discount Codes</h6>
-                                <form action="#" class="coupon-form">
-                                    <input type="text" placeholder="Enter your codes">
+                                <form id='HandleCoupon' class="coupon-form">
+                                    {% csrf_token %}
+                                    <input type="text" name='coupen' placeholder="Enter your codes">
                                     <button type="submit" class="site-btn coupon-btn">Apply</button>
                                 </form>
                             </div>
@@ -41,8 +43,8 @@
                         <div class="col-lg-4 offset-lg-4">
                             <div class="proceed-checkout">
                                 <ul>
-                                    <li class="subtotal">Subtotal <span>$240.00</span></li>
-                                    <li class="cart-total">Total <span>$240.00</span></li>
+                                    <li class="subtotal">Subtotal $<span id='subtotal'>240.00</span></li>
+                                    <li class="cart-total">Total <span id='carttotal'>$240.00</span></li>
                                 </ul>
                                 <a href="#" class="proceed-btn">PROCEED TO CHECK OUT</a>
                             </div>
@@ -57,10 +59,51 @@
 {% endblock %} {% block Js %}
 <script>
     document.getElementById('loadcart').innerHTML = loadcart();
+    Total_Calculate();
+    var cart = JSON.parse(localStorage.getItem('cart'))
+
+    function Total_Calculate() {
+        let total = 0;
+        let subtotal = 0;
+        for (let i in cart) {
+            subtotal += cart[i][2] * cart[i][0];
+            total += parseFloat(document.getElementById('pt' + i).innerHTML)
+        }
+        document.getElementById('subtotal').innerHTML = subtotal;
+        document.getElementById('carttotal').innerHTML = total;
+    }
+    $('#HandleCoupon').click(function(e) {
+        let coupen = $('input[name=coupen]').val();
+        e.preventDefault();
+        $.ajax({
+            url: '/Shopcart/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'coupen': coupen,
+            },
+            encode: true,
+        }).done(function(data) {
+            d = JSON.parse(data);
+            cart = JSON.parse(localStorage.getItem('cart'))
+            for (let crt in cart) {
+                // console.log(ids[0] + ' TO ' + $.type(crt.slice(3))))
+                for (let i = 0; i < d.length; i++) {
+                    if (d[i]['id'] == crt.slice(3)) {
+                        document.getElementById('dic' + crt).innerHTML = `<td class = "p-price first-row' id="dic${crt}"> ${d[i]['discount']}% </td>`
+                        cart[crt][5] = d[i]['discount'];
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        // } else {
+                        //     document.getElementById('dic' + crt).innerHTML = ` <td class = "p-price first-row' id="dic${crt}" > 0.0 % </td>`
+                    }
+                }
+            }
+
+        })
+    })
 
     function loadcart() {
         let str = ''
-        cart = JSON.parse(localStorage.getItem('cart'))
         for (var i in cart) {
             str += `  <tr>
                         <td class="cart-pic first-row"><img src="/media/${cart[i][3]}"  style="max-width: 150px;padding-right:10px" alt=""></td>
@@ -68,25 +111,38 @@
                             <h5>${cart[i][1]}</h5>
                         </td>
                         <td class="p-price first-row">${cart[i][2]}</td>
+                        <td class="p-price first-row discount" id='dic${i}'>${cart[i][5]} %</td>
                         <td class="qua-col first-row">
                             <div >
                                 <div class="pro-qty">
                                     <input type="number" style='width:100%' class='quantity' id='qty${i}' value="${cart[i][0]}">
                                 </div>
                             </div>
-                        </td>
-                        <td class="total-price first-row" id=pt${i}>${cart[i][2] * cart[i][0]}</td>
-                        <td class="close-td first-row"><i class="ti-close"></i></td>
+                        </td>`
+            if (cart[i][5] >= 1) {
+                str += `<td class="total-price first-row" id=pt${i}>${((cart[i][2] * cart[i][0]) - (cart[i][5]/100) * (cart[i][2] * cart[i][0])).toFixed(2)} </td>`
+            } else {
+                str += `<td class="total-price first-row" id=pt${i}>${(cart[i][2] * cart[i][0]).toFixed(2)} </td>`
+            }
+            str += `<td class="close-td first-row"><i class="ti-close"></i></td>
                     </tr>`
         }
         return str;
     }
+
+
     $('.quantity').on('input', function(e) {
         let id = this.id.slice(3)
         let cart = JSON.parse(localStorage.getItem('cart'));
         cart[id][0] = this.value;
-        document.getElementById('pt' + id).innerHTML = (cart[id][2] * cart[id][0]).toFixed(1);
+        let discount = parseInt(cart[id][5]);
+        if (discount >= 1) {
+            document.getElementById('pt' + id).innerHTML = ((cart[id][2] * cart[id][0]) - (cart[id][5] / 100) * (cart[id][2] * cart[id][0])).toFixed(2);
+        } else {
+            document.getElementById('pt' + id).innerHTML = (cart[id][2] * cart[id][0]).toFixed(1);
+        }
         localStorage.setItem('cart', JSON.stringify(cart));
+        Total_Calculate();
     })
 </script>
 {% endblock %}

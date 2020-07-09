@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect
-from .models import Product,Item,Promotions,TimeDeal,ItemComment
+from .models import Product,Item,Promotions,TimeDeal,ItemComment,Coupen
 from Blog.models import Blog_Post
 from django.contrib import messages
 import json
@@ -112,6 +112,8 @@ def product_load(p):
                         'pricse':item.item_FrashPricse,'dicsount':item.item_Discount_pricse,
                         'image':str(item.item_image)})
     return item_list
+
+        
 # Comments
 def Comment_handle(request,pid):
     if request.method == 'POST':
@@ -132,4 +134,18 @@ def Search_Shop(request):
         return HttpResponse(send_data)
 
 def ShopCart(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            coupen = request.POST.get('coupen')
+            item_coupen = Coupen.objects.filter(code=coupen)
+            send_item = Item.objects.filter(item_coupen=item_coupen.first()).values('item_id')
+            # print(item_coupen[0].discount)
+            d = []
+            for p in send_item:
+                d.append({'id':p['item_id'] ,'discount':item_coupen[0].discount})
+            data = json.dumps(d)
+        return HttpResponse(data)
     return render(request,'home/shopping-cart.html')
+
+def CheckOut(request):
+    return render(request,'home/check-out.html');
