@@ -29,9 +29,11 @@ INSTALLED_APPS = [
     'Account.apps.AccountConfig',
     'FAQ.apps.FaqConfig',
     'Blog.apps.BlogConfig',
+    'Order.apps.OrderConfig',
     # Custom Fildes
     'colorfield',
     'tinymce',
+    
     'taggit',
 ]
 

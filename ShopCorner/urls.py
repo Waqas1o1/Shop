@@ -9,5 +9,6 @@ urlpatterns = [
     path('FAQ/',include('FAQ.urls')),
     path('Account/',include('Account.urls')),
     path('Search/',include('Advancse_Search.urls')),
+    path('PlaceOrder/',include('Order.urls')),
 ]+ static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)
 

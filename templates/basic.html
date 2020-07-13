@@ -359,7 +359,7 @@
                     let name = document.getElementById('productname').innerHTML;
                     let imag_path = document.getElementById('productimag').src;
                     imag_path = imag_path.split('/').slice(-1)[0];
-                    cart[idstr] = [qty, name, parseFloat(pricse), imag_path,'Availible Size',0]
+                    cart[idstr] = [qty, name, parseFloat(pricse), imag_path, 'Availible Size', 0]
                 }
                 alert('Item : "' + cart[idstr][1] + '" is added to cart list');
                 updatepopover(cart);

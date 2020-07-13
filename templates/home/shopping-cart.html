@@ -43,10 +43,10 @@
                         <div class="col-lg-4 offset-lg-4">
                             <div class="proceed-checkout">
                                 <ul>
-                                    <li class="subtotal">Subtotal $<span id='subtotal'>240.00</span></li>
-                                    <li class="cart-total">Total <span id='carttotal'>$240.00</span></li>
+                                    <li class="subtotal">Subtotal <span id='subtotal'>$0.00</span></li>
+                                    <li class="cart-total">Total <span id='carttotal'>$0.00</span></li>
                                 </ul>
-                                <a href="#" class="proceed-btn">PROCEED TO CHECK OUT</a>
+                                <a href="/Checkout/" class="proceed-btn">PROCEED TO CHECK OUT</a>
                             </div>
                         </div>
                     </div>
@@ -65,12 +65,13 @@
     function Total_Calculate() {
         let total = 0;
         let subtotal = 0;
+
         for (let i in cart) {
             subtotal += cart[i][2] * cart[i][0];
             total += parseFloat(document.getElementById('pt' + i).innerHTML)
         }
-        document.getElementById('subtotal').innerHTML = subtotal;
-        document.getElementById('carttotal').innerHTML = total;
+        document.getElementById('subtotal').innerHTML = '$' + subtotal.toFixed(2);
+        document.getElementById('carttotal').innerHTML = '$' + total.toFixed(2);
     }
     $('#HandleCoupon').click(function(e) {
         let coupen = $('input[name=coupen]').val();
@@ -93,8 +94,6 @@
                         document.getElementById('dic' + crt).innerHTML = `<td class = "p-price first-row' id="dic${crt}"> ${d[i]['discount']}% </td>`
                         cart[crt][5] = d[i]['discount'];
                         localStorage.setItem('cart', JSON.stringify(cart));
-                        // } else {
-                        //     document.getElementById('dic' + crt).innerHTML = ` <td class = "p-price first-row' id="dic${crt}" > 0.0 % </td>`
                     }
                 }
             }

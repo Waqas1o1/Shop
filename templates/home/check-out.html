@@ -4,7 +4,8 @@
     <!-- Shopping Cart Section Begin -->
     <section class="checkout-section spad">
         <div class="container">
-            <form action="#" class="checkout-form">
+            <form action='/PlaceOrder/' method="POST" class="checkout-form">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="checkout-content">
@@ -14,42 +15,42 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="fir">First Name<span>*</span></label>
-                                <input type="text" id="fir">
+                                <input type="text" name='firstname' id="fir">
                             </div>
                             <div class="col-lg-6">
                                 <label for="last">Last Name<span>*</span></label>
-                                <input type="text" id="last">
+                                <input type="text" name='lastname' id="last">
                             </div>
-                            <div class="col-lg-12">
+                            <!-- <div class="col-lg-12">
                                 <label for="cun-name">Company Name</label>
-                                <input type="text" id="cun-name">
-                            </div>
+                                <input type="text" name='' id="cun-name">
+                            </div> -->
                             <div class="col-lg-12">
                                 <label for="cun">Country<span>*</span></label>
-                                <input type="text" id="cun">
+                                <input type="text" name='country' id="cun">
                             </div>
                             <div class="col-lg-12">
                                 <label for="street">Street Address<span>*</span></label>
-                                <input type="text" id="street" class="street-first">
-                                <input type="text">
+                                <input type="text" id="street" name='street' class="street-first">
+                                <input type="text" name='street2'>
                             </div>
                             <div class="col-lg-12">
                                 <label for="zip">Postcode / ZIP (optional)</label>
-                                <input type="text" id="zip">
+                                <input type="text" name='zipcode' id="zip">
                             </div>
                             <div class="col-lg-12">
                                 <label for="town">Town / City<span>*</span></label>
-                                <input type="text" id="town">
+                                <input type="text" name='city' id="town">
                             </div>
                             <div class="col-lg-6">
                                 <label for="email">Email Address<span>*</span></label>
-                                <input type="text" id="email">
+                                <input type="text" name='email' id="email">
                             </div>
                             <div class="col-lg-6">
                                 <label for="phone">Phone<span>*</span></label>
-                                <input type="text" id="phone">
+                                <input type="text" name='phone' id="phone">
                             </div>
-                            <div class="col-lg-12">
+                            <!-- <div class="col-lg-12">
                                 <div class="create-item">
                                     <label for="acc-create">
                                         Create an account?
@@ -57,18 +58,18 @@
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="checkout-content">
-                            <input type="text" placeholder="Enter Your Coupon Code">
+                            <input type="text" id='HandleCoupon' name='coupen' placeholder="Enter Your Coupon Code">
                         </div>
                         <div class="place-order">
                             <h4>Your Order</h4>
                             <div class="order-total">
                                 <ul class="order-table" id='order'>
-
+                                    <!-- loop Here -->
                                 </ul>
                                 <div class="payment-check">
                                     <div class="pc-item">
@@ -87,7 +88,8 @@
                                     </div>
                                 </div>
                                 <div class="order-btn">
-                                    <button type="submit" class="site-btn place-btn">Place Order</button>
+                                    {% load static %}
+                                    <button type="submit" class="site-btn place-btn" id='PlaceOrderbtn'>Place Order</button>
                                 </div>
                             </div>
                         </div>
@@ -103,17 +105,79 @@
 </html>
 {% block Js %}
 <script>
-    var cart = JSON.parse(localStorage.getItem('cart'));
-    loadOrder(cart);
+    if (localStorage.getItem('cart' == null)) {
+        var cart = {}
+    } else {
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        loadOrder(cart);
+    }
+    $('#HandleCoupon').on('input', function(e) {
+        let coupen = $('input[name=coupen]').val();
+        e.preventDefault();
+        $.ajax({
+            url: '/Shopcart/',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'coupen': coupen,
+            },
+            encode: true,
+        }).done(function(data) {
+            d = JSON.parse(data);
+            cart = JSON.parse(localStorage.getItem('cart'))
+            for (let crt in cart) {
+                for (let i = 0; i < d.length; i++) {
+                    if (d[i]['id'] == crt.slice(3)) {
+                        cart[crt][5] = d[i]['discount'];
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        loadOrder(cart);
+                    }
+                }
+            }
+        })
+    })
+    $('.place-btn').click(function(e) {
+        e.preventDefault();
+        document.getElementById('PlaceOrderbtn').innerHTML = `Placing Order <span><img src="{% static 'order\spinner.gif' %}" width="11%"  style="padding-left: 5px;" alt="Spineer"></span>`;
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: '/PlaceOrder/',
+            data: {
+                firstname: $('input[name=firstname]'),
+                lastname: $('input[name=lastname]'),
+                country: $('input[name=country]'),
+                street: $('input[name=street]'),
+                street2: $('input[name=street2]'),
+                city: $('input[name=city]'),
+                email: $('input[name=email]'),
+                phone: $('input[name=phone]'),
+            },
+            encode: true,
+            success: function(data) {
+                document.getElementById('PlaceOrderbtn').innerHTML = 'Order Placed';
+            }
+        })
+    })
 
     function loadOrder(cart) {
         let str = '<li>Product <span>Total</span></li>';
+        let without_discount = 0;
+        var total = 0.0;
         for (let i in cart) {
-            str += `<li class="fw-normal">${cart[i][1]} x ${cart[i][0]} <span>$${cart[i][0] * cart[i][2]}</span></li>`
+            if (cart[i][5] >= 1) {
+                total += (cart[i][2] * cart[i][0]) - (cart[i][5] / 100) * (cart[i][2] * cart[i][0])
+                str += `<li class="fw-normal">${cart[i][1]} x ${cart[i][0]} <span id=dic${i}>${((cart[i][2] * cart[i][0]) - (cart[i][5]/100) * (cart[i][2] * cart[i][0])).toFixed(2)}$</span><span><b style='color:green'>${cart[i][5]}% OFF</b> :</span> </li>`
+            } else {
+                total += (cart[i][0] * cart[i][2])
+                str += `<li class="fw-normal">${cart[i][1]} x ${cart[i][0]} <span id='dic${i}'>$${cart[i][0] * cart[i][2]}$</span></li>`
+            }
+            without_discount += (cart[i][0] * cart[i][2]);
         }
-        str += `<li class="fw-normal">Subtotal <span>$240.00</span></li>
-                    <li class="total-price">Total <span>$240.00</span></li>`
-        document.getElementById('order').innerHTML = str
+        str += `<li class="fw-normal">Acctual Pricse <span>${without_discount.toFixed(2)}$</span></li>
+                <li class="total-price">Total <span id='total' >${total.toFixed(2)}$</span></li>`
+        document.getElementById('order').innerHTML = str;
+
     }
 </script>
 {% endblock %}

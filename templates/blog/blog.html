@@ -10,7 +10,7 @@
                         <div class="search-form">
                             <h4>Search</h4>
                             <form id="search_blogpost">
-                                <input type="text" name="search" placeholder="Search . . .  ">
+                                <input type="text" name="searchfield" placeholder="Search . . .  ">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
@@ -88,6 +88,25 @@
 </body>
 {% endblock %} {% block Js %}
 <script>
+    function load_blog(data) {
+        str = '';
+        for (var i in data) {
+            str += `  <div class="col-lg-6 col-sm-6">
+                            <div class="blog-item">
+                                <div class="bi-pic">
+                                    <img src="/media/${data[i]['cover_img']}" alt="">
+                                </div>
+                                <div class="bi-text">
+                                    <a href="Blog/{{post.id}}">
+                                        <h4>${data[i]['title']}</h4>
+                                    </a>
+                                    <p>${data[i]['catagory']}<span>- ${data[i]['publish_date']}</span></p>
+                                </div>
+                            </div>
+                        </div>`
+        }
+        return str;
+    }
     $('.filter_blog_by_ctg').click(function(e) {
         e.preventDefault()
         var ctg = this.id;
@@ -108,7 +127,8 @@
 
     $('#search_blogpost').click(function(e) {
         e.preventDefault();
-        var search = $("input[name=search]").val();
+        var search = $("input[name=searchfield]").val();
+        console.log(search)
         $.ajax({
             type: 'GET',
             data: {
@@ -118,28 +138,8 @@
             encode: true,
             success: function(data) {
                 let data_c = JSON.parse(data);
-                document.getElementById('load_blog').innerHTML = s;
+                document.getElementById('load_blog').innerHTML = load_blog(data_c);
             }
         })
     })
-
-    function load_blog(data) {
-        str = '';
-        for (var i in data) {
-            str += `  <div class="col-lg-6 col-sm-6">
-                            <div class="blog-item">
-                                <div class="bi-pic">
-                                    <img src="/media/${data[i]['cover_img']}" alt="">
-                                </div>
-                                <div class="bi-text">
-                                    <a href="Blog/{{post.id}}">
-                                        <h4>${data[i]['title']}</h4>
-                                    </a>
-                                    <p>${data[i]['catagory']}<span>- ${data[i]['publish_date']}</span></p>
-                                </div>
-                            </div>
-                        </div>`
-        }
-        return str;
-    }
 </script>{% endblock %}
