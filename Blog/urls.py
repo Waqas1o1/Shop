@@ -5,4 +5,5 @@ urlpatterns = [
     path('search/',views.Search,name='blogpage'),
     path('Blog/<int:bid>',views.BlogPost,name='blogpage'),
     path('blogcomment/<int:bid>',views.Blogcomment,name='blogpage'),
+    path('filter_Tags/',views.Tags_Filter,name='blogpage'),
 ]

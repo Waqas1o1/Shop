@@ -1,9 +1,14 @@
 from django.db import models
 from tinymce.models import HTMLField
-from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
 from datetime import datetime as dt
 # Create your models here.
+class Tag(models.Model):
+    tag = models.CharField(max_length=30)
+    pub_date = models.DateField(auto_now=True)
+    def __str__(self):
+        return self.tag
+    
 class Blog_Post(models.Model):
     title = models.CharField(max_length=400)
     catagory = models.CharField(max_length=50) 
@@ -21,7 +26,7 @@ class Blog_Post(models.Model):
     blog_quote_1 = models.CharField(max_length=300,blank=True)
     blog_quote_2 = models.CharField(max_length=300,blank=True)
     publish_date = models.DateTimeField(default=dt.now())
-    tags = TaggableManager()
+    tags = models.ManyToManyField(Tag) 
     def __str__(self):
         return self.title 
 class BlogComment(models.Model):

@@ -42,13 +42,8 @@
                         <div class="blog-tags">
                             <h4>Product Tags</h4>
                             <div class="tag-item">
-                                <a href="#">Towel</a>
-                                <a href="#">Shoes</a>
-                                <a href="#">Coat</a>
-                                <a href="#">Dresses</a>
-                                <a href="#">Trousers</a>
-                                <a href="#">Men's hats</a>
-                                <a href="#">Backpack</a>
+                                {% for tag in Tags %}
+                                <a class='Tagfilter' id='tag{{tag.id}}'>{{tag.tag}}</a> {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -63,7 +58,7 @@
                                     <img src="/media/{{post.cover_img}}" alt="">
                                 </div>
                                 <div class="bi-text">
-                                    <a href="Blog/{{post.id}}">
+                                    <a href="/Blog/Blog/{{post.id}}">
                                         <h4>{{post.title}}</h4>
                                     </a>
                                     <p>{{post.catagory}} <span>- May 19, 2019</span></p>
@@ -97,7 +92,7 @@
                                     <img src="/media/${data[i]['cover_img']}" alt="">
                                 </div>
                                 <div class="bi-text">
-                                    <a href="Blog/{{post.id}}">
+                                    <a href="/Blog/Blog/${data[i]['id']}">
                                         <h4>${data[i]['title']}</h4>
                                     </a>
                                     <p>${data[i]['catagory']}<span>- ${data[i]['publish_date']}</span></p>
@@ -107,6 +102,21 @@
         }
         return str;
     }
+    $('.Tagfilter').click(function(e) {
+        let id = this.id.slice(3)
+        $.ajax({
+            type: 'GET',
+            data: {
+                'id': id,
+            },
+            url: '/Blog/filter_Tags/',
+            encode: true,
+            success: function(data) {
+                data_c = JSON.parse(data)
+                document.getElementById('load_blog').innerHTML = load_blog(data_c);
+            }
+        })
+    })
     $('.filter_blog_by_ctg').click(function(e) {
         e.preventDefault()
         var ctg = this.id;

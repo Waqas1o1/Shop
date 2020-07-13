@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse
-from .models import Blog_Post,BlogComment
+from .models import Blog_Post,BlogComment,Tag
 import json
 # Create your views here.
 def Index(request):
@@ -9,12 +9,13 @@ def Index(request):
         send_post = json.dumps(product_send(blog_Post))
         return HttpResponse(send_post)    
     catagories = Blog_Post.objects.values('catagory')
+    tags = Tag.objects.all()
     post = Blog_Post.objects.all()
     recent_post = Blog_Post.objects.all().order_by('publish_date')[0:4]
     ctg_set = set()
     for ctg in catagories:
         ctg_set.add(ctg['catagory'])
-    return render(request,'blog/blog.html',{'Posts':post, 'Recent_posts':recent_post,'catagory':ctg_set})
+    return render(request,'blog/blog.html',{'Posts':post, 'Recent_posts':recent_post,'catagory':ctg_set,'Tags':tags})
 def Search(request):
     if request.is_ajax():
         search = request.GET.get('search',None)
@@ -24,7 +25,7 @@ def Search(request):
 def product_send(obj):
     item_list = []
     for i in obj:
-        item_list.append({'title':i.title,'catagory':i.catagory,'Paragraph':i.Paragraph,'publish_date':str(i.publish_date.date()),'cover_img':str(i.cover_img)})
+        item_list.append({'id':i.id,'title':i.title,'catagory':i.catagory,'Paragraph':i.Paragraph,'publish_date':str(i.publish_date.date()),'cover_img':str(i.cover_img)})
     return item_list
 def BlogPost(request,bid):
     p = Blog_Post.objects.filter(id=bid)
@@ -55,3 +56,7 @@ def product_load(obj):
     for comment in obj:
         item_list.append({'Username':str(comment.user),'comment':comment.comment,'timestamp':str(comment.timestamp.date())})
     return item_list
+def Tags_Filter(request):
+    tag = request.GET.get('id',None)
+    data = json.dumps(product_send(Blog_Post.objects.filter(tags=tag)))    
+    return HttpResponse(data)
