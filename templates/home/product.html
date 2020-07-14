@@ -53,9 +53,9 @@
                                 <div class="pd-desc">
                                     <p>{{product.item_discription}}</p>
                                     {% if product.item_Discount_pricse != 0 %}
-                                    <h4 id='pricse'>{{product.item_Discount_pricse}}<span>{{product.item_FrashPricse}}</span></h4>
+                                    <h4 id='pricse'>{{product.item_Discount_pricse}}<span>{{product.item_FrashPricse}}</span>$</h4>
                                     {% else %}
-                                    <h4 id='pricse'>{{product.item_FrashPricse}}</h4>
+                                    <h4 id='pricse'>{{product.item_FrashPricse}}$</h4>
                                     {% endif %}
                                 </div>
                                 <div class="pd-color">
@@ -110,7 +110,8 @@
                                 </div>
                                 <ul class="pd-tags">
                                     <li><span>CATEGORIES</span>: {{product.item_category}}</li>
-                                    <li><span>TAGS</span>: {{product.item_subCategory}}</li>
+                                    <li><span>TAGS</span>:{% for tag in Tags %} {{tag}}, {% endfor %}
+                                    </li>
                                 </ul>
                                 <div class="pd-share">
                                     <div class="p-code">Sku : {{product.item_id}}</div>
@@ -146,8 +147,7 @@
                                                 <h5>Introduction</h5>
                                                 <p>{{product.item_discription}} </p>
                                                 <h5>Features</h5>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                                    ex ea commodo consequat. Duis aute irure dolor in </p>
+                                                <p>{{product.item_discription}}</p>
                                             </div>
                                             <div class="col-lg-5">
                                                 <img src="/media/{{product.item_image}}" id='productimag' alt="">
@@ -345,6 +345,8 @@
     try {
         var size = cart['pdt' + i][4];
         let cls = '';
+        // Get quantity
+        document.getElementById('productquantity').value = cart['pdt' + i][0];
         if (size == 'medium') {
             cls = '#medium'
         }
@@ -357,6 +359,7 @@
         if (size == 'large') {
             cls = '#large'
         }
+
         $(cls).addClass('active');
         // Get Sizes
         var size = '';
@@ -364,7 +367,7 @@
             size = this.value;
         })
     } catch {
-
+        console.log('size or quantity uncatched')
     }
 
     // Fadd Animations

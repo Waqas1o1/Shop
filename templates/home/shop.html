@@ -97,13 +97,9 @@
                     <div class="filter-widget">
                         <h4 class="fw-title">Tags</h4>
                         <div class="fw-tags">
-                            <a class='tag_filter' id='Towel'>Towel</a>
-                            <a class='tag_filter' id='Shoes'>Shoes</a>
-                            <a class='tag_filter' id='Coat'>Coat</a>
-                            <a class='tag_filter' id='Dresses'>Dresses</a>
-                            <a class='tag_filter' id='Trousers'>Trousers</a>
-                            <a class='tag_filter' id='Men' s hats '>Men's hats</a>
-                                <a class='tag_filter' id='Backpack'>Backpack</a>
+                        {% for tag in Tags %}
+                            <a class='tag_filter' id='{{tag.id}}'>{{tag}}</a>
+                        {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -142,7 +138,7 @@
                                         </div>
                                         {% endif %}
                                         <ul>
-                                            <li class="w-icon active"><a href="#"><i class="icon_bag_alt cartbtn" id='shp{{item.item_id}}'></i></a></li>
+                                            <li class="w-icon active cartbtn" id='pdt{{item.item_id}}'><a id='Incart{{item.item_id}}'><i class="icon_bag_alt cartbtn" ></i></a></li>
                                             <li class="quick-view"><a href="/product/{{item.item_id}}">+ Quick View</a></li>
                                             <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
                                         </ul>
@@ -153,7 +149,7 @@
                                             <h5>{{item.item_titile}}</h5>
                                         </a>
                                         <div class="product-price">
-                                            {% if item.item_Discount_pricse != 0 %} ${{item.item_Discount_pricse}}
+                                            {% if item.item_Discount_pricse != 0 %} {{item.item_Discount_pricse}}$
                                             <span>${{item.item_FrashPricse}}</span> {% else %} ${{item.item_FrashPricse}} {% endif %}
 
                                         </div>

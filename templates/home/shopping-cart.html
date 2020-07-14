@@ -109,7 +109,7 @@
                         <td class="cart-title first-row">
                             <h5>${cart[i][1]}</h5>
                         </td>
-                        <td class="p-price first-row">${cart[i][2]}</td>
+                        <td class="p-price first-row">${cart[i][2]} $</td>
                         <td class="p-price first-row discount" id='dic${i}'>${cart[i][5]} %</td>
                         <td class="qua-col first-row">
                             <div >
@@ -119,9 +119,9 @@
                             </div>
                         </td>`
             if (cart[i][5] >= 1) {
-                str += `<td class="total-price first-row" id=pt${i}>${((cart[i][2] * cart[i][0]) - (cart[i][5]/100) * (cart[i][2] * cart[i][0])).toFixed(2)} </td>`
+                str += `<td class="total-price first-row" id=pt${i}>${((cart[i][2] * cart[i][0]) - (cart[i][5]/100) * (cart[i][2] * cart[i][0])).toFixed(2)} $</td>`
             } else {
-                str += `<td class="total-price first-row" id=pt${i}>${(cart[i][2] * cart[i][0]).toFixed(2)} </td>`
+                str += `<td class="total-price first-row" id=pt${i}>${(cart[i][2] * cart[i][0]).toFixed(2)} $</td>`
             }
             str += `<td class="close-td first-row"><i class="ti-close"></i></td>
                     </tr>`

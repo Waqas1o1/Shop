@@ -32,8 +32,7 @@ INSTALLED_APPS = [
     'Order.apps.OrderConfig',
     # Custom Fildes
     'colorfield',
-    'tinymce',
-    
+    'tinymce',    
     'taggit',
 ]
 

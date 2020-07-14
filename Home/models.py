@@ -5,6 +5,12 @@ from django.contrib.auth.models import User
 from datetime import datetime as dt 
 # Create your models here.
 # ######## Products
+class Tag(models.Model):
+    tag = models.CharField(max_length=30)
+    pub_date = models.DateField()
+    def __str__(self):
+        return self.tag
+    
 class Product(models.Model):
     product_id = models.AutoField(primary_key=True) 
     product_category = models.CharField(max_length=30)
@@ -51,6 +57,8 @@ class Item(models.Model):
     item_zoom_pic3 = models.ImageField(blank=True)
     # Cuppen
     item_coupen = models.ManyToManyField(Coupen)
+    # tags
+    tags = models.ManyToManyField(Tag)
     def __str__(self):
         return self.item_name + ' ' + self.item_titile
 

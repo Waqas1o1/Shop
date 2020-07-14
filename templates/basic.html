@@ -127,7 +127,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="cart-price" id='totalpricse'>$0.00</li>
+                            <li class="cart-price" id='Grandtotal'>$0.00</li>
                         </ul>
                     </div>
                 </div>
@@ -166,9 +166,9 @@
                         <li><a href="/Account/contact_us">Contact</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
-                                <li><a href="./blog-details.html">Blog Details</a></li>
-                                <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                <li><a href="./check-out.html">Checkout</a></li>
+                                <li><a href="/Blog/">Blog Details</a></li>
+                                <li><a href="/Shopcart/">Shopping Cart</a></li>
+                                <li><a href="/Checkout/">Checkout</a></li>
                                 <li><a href="/FAQ/">Faq</a></li>
                                 {% if not user.is_authenticated %}
                                 <li><a href="/Account/register/">Register</a></li>
@@ -348,7 +348,6 @@
         }
         // Add cart button
         $('.cartbtn').click(function() {
-
                 var idstr = this.id.toString();
                 if (cart[idstr] != undefined) {
                     let qty = document.getElementById('productquantity').value;
@@ -361,8 +360,8 @@
                     imag_path = imag_path.split('/').slice(-1)[0];
                     cart[idstr] = [qty, name, parseFloat(pricse), imag_path, 'Availible Size', 0]
                 }
-                alert('Item : "' + cart[idstr][1] + '" is added to cart list');
                 updatepopover(cart);
+                alert('Item : "' + cart[idstr][1] + '" is added to cart list');
             })
             // when Cross click
         $('.ti-close').on('click', function(e) {
@@ -370,6 +369,7 @@
             var cart = JSON.parse(localStorage.getItem('cart'));
             delete cart[id];
             updatepopover(cart);
+            document.location.reload();
         })
 
         function updatepopover(cart) {
@@ -392,15 +392,23 @@
             }
             document.getElementById('cart').innerHTML = str;
             document.getElementById('countcart').innerHTML = Object.keys(cart).length;
-            document.getElementById('totalpricse').innerHTML = totoalpricse.toFixed(2);
+            document.getElementById('totalpricse').innerHTML = totoalpricse.toFixed(2) + '$';
+            document.getElementById('Grandtotal').innerHTML = totoalpricse.toFixed(2) + '$';
             updatecart(cart)
         }
         $('.sizebtn').click(function() {
             let val = this.value;
-
         })
 
         function updatecart(cart) {
+            try {
+                for (let btn in cart) {
+                    btn = btn.slice(3)
+                    document.getElementById(`Incart${btn}`).innerHTML = `<i uk-icon='check'></i>`;
+                }
+            } catch {
+                console.log('UnCatched')
+            }
             localStorage.setItem('cart', JSON.stringify(cart));
         }
     </script>

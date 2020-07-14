@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse,redirect
-from .models import Product,Item,Promotions,TimeDeal,ItemComment,Coupen
+from .models import Product,Item,Promotions,TimeDeal,ItemComment,Coupen,Tag
 from Blog.models import Blog_Post
 from django.contrib import messages
 import json
@@ -37,6 +37,11 @@ def Product_view(request,pid):
     ctg = pdt[0].item_subCategory
     relative_pdt = Item.objects.all()
     search_realted = Search_pdt(relative_pdt,ctg)
+    tag_id = pdt.values('tags')
+    tags = []
+    for tag in tag_id:
+        tags.append(tag['tags'])
+    p_tags = Tag.objects.filter(id = tags[0])
     #extra images
     send_ex = []
     send_ex.append(pdt[0].item_zoom_pic1)
@@ -44,7 +49,7 @@ def Product_view(request,pid):
     send_ex.append(pdt[0].item_zoom_pic3)
     # Item Comments
     comments = ItemComment.objects.filter(post=pid)
-    send_pdt = {"product":pdt[0],'realted_products':search_realted,'id':pid, 'item_zoom_pic':send_ex,'comments':comments}
+    send_pdt = {"product":pdt[0],'realted_products':search_realted,'Tags':p_tags,'id':pid,'item_zoom_pic':send_ex,'comments':comments}
     return render(request,'home/product.html',send_pdt)
 
 def Search_pdt(pdt,ctg):
@@ -58,7 +63,8 @@ def Search_pdt(pdt,ctg):
 
 def Shop_view(request):
     items = Item.objects.all()
-    send = {'items':items}
+    tag = Tag.objects.all()
+    send = {'items':items,'Tags':tag}
     return render(request,'home/shop.html',send)
 
 def SortShop(request,shortby):
@@ -100,8 +106,7 @@ def BySizes(request):
     return render(request,'home/shop.html',send)
 def ByTags(request):
     tag = request.GET.get('tag',None)
-
-    items = Item.objects.filter(item_name__startswith =  tag);
+    items = Item.objects.filter(tags=tag);
     data = json.dumps(product_load(items))
     return HttpResponse(data)
 # Private Funtion
@@ -111,9 +116,7 @@ def product_load(p):
         item_list.append({'id':item.item_id,'name':item.item_name,'title':item.item_titile,
                         'pricse':item.item_FrashPricse,'dicsount':item.item_Discount_pricse,
                         'image':str(item.item_image)})
-    return item_list
-
-        
+    return item_list        
 # Comments
 def Comment_handle(request,pid):
     if request.method == 'POST':
@@ -125,14 +128,12 @@ def Comment_handle(request,pid):
         messages.add_message(request,messages.SUCCESS,'Comment is posted')
 
     return redirect('/product/'+str(pid))
-
 def Search_Shop(request):
     if request.is_ajax():
         search = request.GET.get('search',None)
         data = Item.objects.filter(item_titile__icontains=search)
         send_data = json.dumps(product_load(data))
         return HttpResponse(send_data)
-
 def ShopCart(request):
     if request.is_ajax():
         if request.method == 'POST':
@@ -146,6 +147,5 @@ def ShopCart(request):
             data = json.dumps(d)
         return HttpResponse(data)
     return render(request,'home/shopping-cart.html')
-
 def CheckOut(request):
     return render(request,'home/check-out.html');
