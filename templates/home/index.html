@@ -5,14 +5,14 @@
     <section class="hero-section">
         <div class="hero-items owl-carousel">
             {% for item in Promotions %}
-            <div class="single-hero-items set-bg" data-setbg="/media/{{item.promtion_cover1}}">
+            <div class="single-hero-items set-bg" style="padding-left: 50px;" data-setbg="/media/{{item.promtion_cover1}}">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-5">
                             <span>{{item.promotion_title}}</span>
                             <h1>{{item.promotion_name}}</h1>
-                            <p>{{item.promotion_desc|truncatechars:100}}</p>
-                            <a href="#" class="primary-btn">Shop Now</a>
+                            <p>{{item.promotion_desc|truncatechars:150}}</p>
+                            <a href="/shop/" class="primary-btn">Shop Now</a>
                         </div>
                     </div>
                     <div class="off-card">
@@ -21,7 +21,6 @@
                 </div>
             </div>
             {% endfor %}
-
         </div>
     </section>
     <!-- Hero Section End -->
