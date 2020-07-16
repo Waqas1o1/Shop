@@ -98,7 +98,7 @@
                         <h4 class="fw-title">Tags</h4>
                         <div class="fw-tags">
                         {% for tag in Tags %}
-                            <a class='tag_filter' id='{{tag.id}}'>{{tag}}</a>
+                            <a class='tag_filter' id='{{tag.id}}'>{{tag|capfirst}}</a>
                         {% endfor %}
                         </div>
                     </div>
