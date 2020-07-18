@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'colorfield',
     'tinymce',    
     'taggit',
+    # Paypal
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [

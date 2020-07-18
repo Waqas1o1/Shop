@@ -71,7 +71,7 @@
                                 <ul class="order-table" id='order'>
                                     <!-- loop Here -->
                                 </ul>
-                                <div class="payment-check">
+                                <!-- <div class="payment-check">
                                     <div class="pc-item">
                                         <label for="pc-check">
                                             Cheque Payment
@@ -86,10 +86,11 @@
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="order-btn">
-                                    {% load static %}
-                                    <button type="submit" class="site-btn place-btn" id='PlaceOrderbtn'>Place Order</button>
+                                    <!-- {% load static %}
+                                    <button type="submit" class="site-btn place-btn" id='PlaceOrderbtn'>Place Order</button>-->
+                                    <div id="paypal-button-container"></div>
                                 </div>
                             </div>
                         </div>
@@ -104,6 +105,34 @@
 
 </html>
 {% block Js %}
+
+<!-- Include the PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AWKE3yuJO4DiTxyutLbFlflJ0L9K_AMuGKyItJlVNtF1M17TfvT2di-pwP_xNs3xuIkrCjNGQb1V27wX&currency=USD"></script>
+<script>
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '0.01'
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                console.log(details)
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+        }
+    }).render('#paypal-button-container');
+</script>
 <script>
     if (localStorage.getItem('cart' == null)) {
         var cart = {}
@@ -139,25 +168,26 @@
     $('.place-btn').click(function(e) {
         e.preventDefault();
         document.getElementById('PlaceOrderbtn').innerHTML = `Placing Order <span><img src="{% static 'order\spinner.gif' %}" width="11%"  style="padding-left: 5px;" alt="Spineer"></span>`;
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: '/PlaceOrder/',
-            data: {
-                firstname: $('input[name=firstname]'),
-                lastname: $('input[name=lastname]'),
-                country: $('input[name=country]'),
-                street: $('input[name=street]'),
-                street2: $('input[name=street2]'),
-                city: $('input[name=city]'),
-                email: $('input[name=email]'),
-                phone: $('input[name=phone]'),
-            },
-            encode: true,
-            success: function(data) {
-                document.getElementById('PlaceOrderbtn').innerHTML = 'Order Placed';
-            }
-        })
+        //     $.ajax({
+        //         async: false,
+        //         type: 'POST',
+        //         url: '/PlaceOrder/',
+        //         data: {
+        //             firstname: $('input[name=firstname]'),
+        //             lastname: $('input[name=lastname]'),
+        //             country: $('input[name=country]'),
+        //             street: $('input[name=street]'),
+        //             street2: $('input[name=street2]'),
+        //             city: $('input[name=city]'),
+        //             email: $('input[name=email]'),
+        //             phone: $('input[name=phone]'),
+        //         },
+        //         encode: true,
+        //         success: function(data) {
+        //             document.getElementById('PlaceOrderbtn').innerHTML = 'Order Placed';
+        //         }
+        //     })
+        // })
     })
 
     function loadOrder(cart) {

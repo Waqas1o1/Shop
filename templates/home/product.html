@@ -29,9 +29,14 @@
                             <div class="product-thumbs">
                                 <div class="product-thumbs-track ps-slider owl-carousel">
                                     <div class="pt zoomactive" data-imgbigurl="/media/{{product.item_zoom_pic1}}"><img src="/media/{{product.item_zoom_pic1}}" alt=""></div>
+                                    {% if product.item_zoom_pic2%}
                                     <div class="pt zoomactive" data-imgbigurl="/media/{{product.item_zoom_pic2}}"><img src="/media/{{product.item_zoom_pic2}}" alt=""></div>
+                                    {% endif %}
+                                    {% if product.item_zoom_pic3%}
                                     <div class="pt zoomactive" data-imgbigurl="/media/{{product.item_zoom_pic3}}"><img src="/media/{{product.item_zoom_pic3}}" alt=""></div>
+                                     {% endif %}
                                 </div>
+
                             </div>
                         </div>
                         <div class="col-lg-6">

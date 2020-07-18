@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from colorfield.fields import ColorField
 from django.contrib.auth.models import User
 from datetime import datetime as dt 
+from django_resized import ResizedImageField
 # Create your models here.
 # ######## Products
 class Tag(models.Model):
@@ -15,7 +16,7 @@ class Product(models.Model):
     product_id = models.AutoField(primary_key=True) 
     product_category = models.CharField(max_length=30)
     product_publishDate = models.DateTimeField(default='',)
-    product_cover = models.ImageField(blank=True)
+    product_cover = ResizedImageField(size=[470,620],quality=100,blank=True)
     product_baneer = models.ImageField()
     
     def __str__(self):
@@ -37,7 +38,7 @@ class Item(models.Model):
     item_FrashPricse = models.FloatField(max_length=30)
     item_Discount_pricse = models.FloatField(max_length=30,default=0.00)
     item_discription = models.TextField()
-    item_image = models.ImageField() 
+    item_image = ResizedImageField(size=[270,330],quality=100)
     item_quantity = models.IntegerField()
     item_weight = models.FloatField(default=1.0,help_text="In KG")
     item_publishDate = models.DateTimeField() 
@@ -52,9 +53,9 @@ class Item(models.Model):
     item_color2 = ColorField(null=True)
     item_color3 = ColorField(null=True)
     # Extra images of item
-    item_zoom_pic1 = models.ImageField(blank=True)
-    item_zoom_pic2 = models.ImageField(blank=True)
-    item_zoom_pic3 = models.ImageField(blank=True)
+    item_zoom_pic1 = ResizedImageField(size=[440,520],keep_meta=True,quality=100,blank=True)
+    item_zoom_pic2 = ResizedImageField(size=[440,520],quality=100,blank=True)
+    item_zoom_pic3 = ResizedImageField(size=[440,520],quality=100,blank=True)
     # Cuppen
     item_coupen = models.ManyToManyField(Coupen)
     # tags
@@ -70,7 +71,7 @@ class Promotions(models.Model):
     promotion_up_to = models.IntegerField()
     promotion_catagory = models.ForeignKey(Product,on_delete=models.CASCADE)
     promotion_item = models.ForeignKey(Item,models.CASCADE)
-    promtion_cover1 = models.ImageField()
+    promtion_cover1 = ResizedImageField(size=[1920,728],quality=100,blank=True)
     promotion_duration = models.DateTimeField(default=dt.now)
     def __str__(self):
         return self.promotion_name + ' ' + self.promotion_title

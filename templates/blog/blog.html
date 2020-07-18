@@ -43,7 +43,7 @@
                             <h4>Product Tags</h4>
                             <div class="tag-item">
                                 {% for tag in Tags %}
-                                <a class='Tagfilter' id='tag{{tag.id}}'>{{tag.tag}}</a> {% endfor %}
+                                <a class='Tagfilter' id='tag{{tag.id}}'>{{tag.tag|capfirst}}</a> {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -55,13 +55,13 @@
                         <div class="col-lg-6 col-sm-6">
                             <div class="blog-item">
                                 <div class="bi-pic">
-                                    <img src="/media/{{post.cover_img}}" alt="">
+                                    <img src="/media/{{post.thumbnaiil_img}}" alt="">
                                 </div>
                                 <div class="bi-text">
                                     <a href="/Blog/Blog/{{post.id}}">
                                         <h4>{{post.title}}</h4>
                                     </a>
-                                    <p>{{post.catagory}} <span>- May 19, 2019</span></p>
+                                    <p>{{post.catagory|capfirst}} <span>- May 19, 2019</span></p>
                                 </div>
                             </div>
                         </div>
