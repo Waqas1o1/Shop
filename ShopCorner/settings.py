@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'tinymce',    
     'taggit',
     # Paypal
-    'paypal.standard.ipn',
+
 ]
 
 MIDDLEWARE = [

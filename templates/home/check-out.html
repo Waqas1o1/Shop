@@ -4,7 +4,7 @@
     <!-- Shopping Cart Section Begin -->
     <section class="checkout-section spad">
         <div class="container">
-            <form action='/PlaceOrder/' method="POST" class="checkout-form">
+            <form action='/PlaceOrder/' method="POST" id='order_form' class="checkout-form">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-6">
@@ -50,6 +50,7 @@
                                 <label for="phone">Phone<span>*</span></label>
                                 <input type="text" name='phone' id="phone">
                             </div>
+                            <input type="text" id='order_details' name='order' hidden>
                             <!-- <div class="col-lg-12">
                                 <div class="create-item">
                                     <label for="acc-create">
@@ -117,7 +118,7 @@
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: '0.01'
+                        value: parseFloat(document.getElementById('total').innerHTML),
                     }
                 }]
             });
@@ -129,6 +130,8 @@
                 // Show a success message to the buyer
                 console.log(details)
                 alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                document.getElementById('order_details').value = localStorage.getItem('cart');
+                $('#order_form').submit();
             });
         }
     }).render('#paypal-button-container');
@@ -164,30 +167,6 @@
                 }
             }
         })
-    })
-    $('.place-btn').click(function(e) {
-        e.preventDefault();
-        document.getElementById('PlaceOrderbtn').innerHTML = `Placing Order <span><img src="{% static 'order\spinner.gif' %}" width="11%"  style="padding-left: 5px;" alt="Spineer"></span>`;
-        //     $.ajax({
-        //         async: false,
-        //         type: 'POST',
-        //         url: '/PlaceOrder/',
-        //         data: {
-        //             firstname: $('input[name=firstname]'),
-        //             lastname: $('input[name=lastname]'),
-        //             country: $('input[name=country]'),
-        //             street: $('input[name=street]'),
-        //             street2: $('input[name=street2]'),
-        //             city: $('input[name=city]'),
-        //             email: $('input[name=email]'),
-        //             phone: $('input[name=phone]'),
-        //         },
-        //         encode: true,
-        //         success: function(data) {
-        //             document.getElementById('PlaceOrderbtn').innerHTML = 'Order Placed';
-        //         }
-        //     })
-        // })
     })
 
     function loadOrder(cart) {
