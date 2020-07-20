@@ -31,10 +31,9 @@
                                     <div class="pt zoomactive" data-imgbigurl="/media/{{product.item_zoom_pic1}}"><img src="/media/{{product.item_zoom_pic1}}" alt=""></div>
                                     {% if product.item_zoom_pic2%}
                                     <div class="pt zoomactive" data-imgbigurl="/media/{{product.item_zoom_pic2}}"><img src="/media/{{product.item_zoom_pic2}}" alt=""></div>
-                                    {% endif %}
-                                    {% if product.item_zoom_pic3%}
+                                    {% endif %} {% if product.item_zoom_pic3%}
                                     <div class="pt zoomactive" data-imgbigurl="/media/{{product.item_zoom_pic3}}"><img src="/media/{{product.item_zoom_pic3}}" alt=""></div>
-                                     {% endif %}
+                                    {% endif %}
                                 </div>
 
                             </div>
@@ -109,7 +108,7 @@
                                 </div>
                                 <div class="quantity">
                                     <div class="pro-qty">
-                                        <input type="text" id='productquantity' value="1">
+                                        <input type="number" min="1" max="999" id='productquantity' value="1">
                                     </div>
                                     <a class="primary-btn pd-cart cartbtn" id="pdt{{product.item_id}}">Add To Cart</a>
                                 </div>
@@ -306,7 +305,7 @@
                 <div class="col-lg-3 col-sm-6">
                     <div class="product-item">
                         <div class="pi-pic">
-                            <img src="/media/{{item.item_image}}" alt=""> {% if item.item_Discount_pricse != 0.0 %}
+                            <img src="/media/{{item.item_image}}" alt="">{% if item.item_Discount_pricse != 0.0 %}
                             <div class="sale">Sale</div>
                             {% endif %}
                             <div class="icon">
@@ -346,26 +345,25 @@
 <script>
     var cart = JSON.parse(localStorage.getItem('cart'));
     var i = window.location.href.split('/')[4];
-
     try {
         var size = cart['pdt' + i][4];
-        let cls = '';
+        let ids = '';
         // Get quantity
         document.getElementById('productquantity').value = cart['pdt' + i][0];
         if (size == 'medium') {
-            cls = '#medium'
+            ids = '#medium'
         }
         if (size == 'small') {
-            cls = '#small'
+            ids = '#small'
         }
         if (size == 'extra small') {
-            cls = '#extrasmall'
+            ids = '#extrasmall'
         }
         if (size == 'large') {
-            cls = '#large'
+            ids = '#large'
         }
 
-        $(cls).addClass('active');
+        $(ids).addClass('active');
         // Get Sizes
         var size = '';
         $('.sizebtn').click(function() {

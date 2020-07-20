@@ -58,9 +58,9 @@
 </body>
 {% endblock %} {% block Js %}
 <script>
-    document.getElementById('loadcart').innerHTML = loadcart();
-    Total_Calculate();
     var cart = JSON.parse(localStorage.getItem('cart'))
+    loadcart(cart);
+    Total_Calculate();
 
     function Total_Calculate() {
         let total = 0;
@@ -101,7 +101,7 @@
         })
     })
 
-    function loadcart() {
+    function loadcart(cart) {
         let str = ''
         for (var i in cart) {
             str += `  <tr>
@@ -114,7 +114,7 @@
                         <td class="qua-col first-row">
                             <div >
                                 <div class="pro-qty">
-                                    <input type="number" style='width:100%' class='quantity' id='qty${i}' value="${cart[i][0]}">
+                                    <input type="number" min="1" max="999" style='width:100%' class='quantity' id='qty${i}' value="${cart[i][0]}">
                                 </div>
                             </div>
                         </td>`
@@ -123,12 +123,19 @@
             } else {
                 str += `<td class="total-price first-row" id=pt${i}>${(cart[i][2] * cart[i][0]).toFixed(2)} $</td>`
             }
-            str += `<td class="close-td first-row"><i class="ti-close"></i></td>
+            str += `<td class="close-td first-row"><i class="ti-close close-pdt" id='cls${i}'></i></td>
                     </tr>`
         }
+        document.getElementById('loadcart').innerHTML = str;
         return str;
     }
-
+    $('.close-td').on('click', '.close-pdt', function() {
+        let id = this.id;
+        delete cart[id.slice(3)];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadcart(cart);
+        window.location.reload();
+    })
 
     $('.quantity').on('input', function(e) {
         let id = this.id.slice(3)
